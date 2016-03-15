@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Written by Johan Guldmyr @ CSC 2014
+# Because these perfsonar boxes are really minimum maintenance.
+
+RUNNING_KERNEL=`uname -r`
+DEFAULT_KERNEL=`grubby --default-kernel | cut -d- -f"2 3"`
+WEB100=`echo $DEFAULT_KERNEL|grep web100|wc -l`
+
+# Is default_kernel web100 kernel?
+if [ $WEB100 == 1 ]; then
+	# DEFAULT kernel is a web100 kernel, continue
+	/bin/true
+else
+#	echo "There is no web100 in $DEFAULT_KERNEL, don't reboot."
+	exit 0
+fi	
+
+if [ $RUNNING_KERNEL != $DEFAULT_KERNEL ]; then
+
+      wall "The system will be rebooted in 15 minutes due to a kernel update."
+      sleep 15m
+      reboot
+
+fi

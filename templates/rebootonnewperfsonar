@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Written by Johan Guldmyr @ CSC 2015
+## Background:
+# Because these perfsonar boxes are really minimum maintenance.
+# Rebooting on new perfsonar updates (because some of them re-initialize the firewalls to the perfsonar defaults which opens up port 22 and 443 from Internet)
+# Reboot so that our CSC /etc/rc.local hack runs which restricts port 22 & 443
+
+## Method:
+# Match on something like this in /var/log/yum.log
+# This package has /opt/perfsonar_ps/toolkit/etc/perfsonar_firewall_settings.conf
+# Nov 07 04:43:10 Updated: perl-perfSONAR_PS-Toolkit-security-3.5.0.6-1.pSPS.noarch
+
+## Installation:
+# Install into a file with execution permissions in /etc/cron.daily/
+# Must run after 0yum-cron
+
+DATE="$(date +'%b %d')"
+#DATE="Nov 07"
+
+ISITUPDATED="$(tail -n 15 /var/log/yum.log|grep "$DATE"|grep perl-perfSONAR_PS-Toolkit-security|wc -l)"
+
+if [ "$ISITUPDATED" != 0 ]; then
+
+      wall "The system will be rebooted in 15 minutes due to an updated perl-perfSONAR_PS-Toolkit-security"
+      sleep 15m
+      reboot
+
+fi

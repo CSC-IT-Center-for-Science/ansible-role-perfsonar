@@ -1,0 +1,38 @@
+--- agent_configuration.conf.rpmnew     2014-11-07 22:29:54.000000000 +0200
++++ agent_configuration.conf    2015-02-03 11:52:59.400499673 +0200
+@@ -31,6 +31,13 @@
+ #    #ca_certificate_file          /etc/pki/tls/bundle.crt
+ #</mesh>
+ 
++## WLCG MESH {{ ansible_managed }}
++<mesh>
++    configuration_url           https://myosg.grid.iu.edu/pfmesh/mine/hostname/{{ ansible_fqdn }}
++    validate_certificate        0
++    required                    1
++</mesh>
++
+ ## You can use the 'use_regular_testing' variable to disable having the mesh
+ ## configuration generate the regular testing # configuration so that it will
+ ## generate the traceroute master, owmesh and # pinger landmarks files instead.
+@@ -52,7 +59,7 @@
+ ## You can include one or more 'address' options to specify which address
+ ## corresponds to this host. By default, the agent will attempt to guess the
+ ## address using the hostname of the host, as well as the hostname IPs.
+-#address                      chic-pt1.es.net
++address                      {{ ansible_fqdn }}
+ 
+ # The 'restart_services' option can be used to specify whether the services
+ # should be restarted after their configuration is updated. If the
+@@ -91,9 +98,11 @@
+ #admin_email         admin1@site.edu
+ #admin_email         admin2@site.edu
+ 
++admin_email    {{ adminMailAddr }}
++
+ 
+ ## The 'skip_redundant_tests' can be used so that if the meshes end up creating
+ ## multiple tests between hosts with the exact same test parameters, it will
+ ## only setup the hosts to only run one test. If you enable this, you won't see
+ ## the skipped tests in the Toolkit GUI
+-#skip_redundant_tests        1
++skip_redundant_tests        1

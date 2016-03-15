@@ -1,0 +1,62 @@
+---
+# tasks file for ansible-role-perfsonar
+
+### Modify firewall rules because on perfsonar updates it opens port 22 and 443 from *.
+
+  - name: copy in perfsonar_changefw443n22rules
+    template: src={{ perfsonar_changefw443n22rules }} 
+              dest=/usr/local/bin/changefw443n22rules.sh 
+              owner=root group=root mode=0750
+
+  - name: run perfsonar_changefw443n22rules on boot
+    lineinfile: 
+        dest=/etc/rc.local 
+        insertafter=EOF 
+        regexp=^/bin/bash
+        line="/bin/bash /usr/local/bin/changefw443n22rules.sh" 
+
+### Patch agent_configuration
+
+  - name: copy in ps_agentconfigpatch
+    template: 
+        src={{ ps_agentconfigpatch }} 
+        dest={{ ps_agentconfigpatch_remote_path }} 
+        owner=root group=root mode=0644
+    tags: agentconfig
+
+  - name: check if ps_agentconfigpatch has been applied
+    command: grep -c hepix /opt/perfsonar_ps/mesh_config/etc/agent_configuration.conf
+    register: reg_ps_agentconfigpatched
+    ignore_errors: True
+    tags: agentconfig
+
+  - name: patch agentconfig
+    shell: patch /opt/perfsonar_ps/mesh_config/etc/agent_configuration.conf {{ ps_agentconfigpatch_remote_path }}
+    when: reg_ps_agentconfigpatched|failed
+    register: reg_ps_diditpatch
+    tags: agentconfig
+
+  - name: update mesg config
+    command: /opt/perfsonar_ps/mesh_config/bin/generate_configuration
+    when: reg_ps_diditpatch|changed
+    tags: agentconfig
+
+  - name: disable watcher_log_archive_cleanup
+    # ^(splashimage=.*)$
+    lineinfile: 
+        dest=/etc/cron.d/cron-service_watcher 
+        backrefs=true state=present 
+        regexp='^(30 1 .*)' 
+        line="#\\1"
+
+  - name: reboot on new web100 kernel
+    template: 
+        src={{ ps_rebootonkernelupdatecronscript }} 
+        dest=/etc/cron.daily/rebootonnewweb100kernel 
+        owner=root group=root mode=0755
+
+  - name: reboot on new pefsonar-security-updates
+    template: 
+        src={{ ps_rebootonnewperfsonarscript }} 
+        dest=/etc/cron.daily/rebootonnewperfsonar 
+        owner=root group=root mode=0755
