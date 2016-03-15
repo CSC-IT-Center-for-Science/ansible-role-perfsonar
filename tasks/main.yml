@@ -17,7 +17,7 @@
 
 ### Patch agent_configuration
 
-  - name: copy in ps_agentconfigpatch
+  - name: template in ps_agentconfigpatch
     template: 
         src={{ ps_agentconfigpatch }} 
         dest={{ ps_agentconfigpatch_remote_path }} 
@@ -28,6 +28,7 @@
     command: grep -c myosg {{ ps_agentconfig_path }}
     register: reg_ps_agentconfigpatched
     ignore_errors: True
+    changed_when: False
     tags: agentconfig
 
   - name: patch agentconfig
