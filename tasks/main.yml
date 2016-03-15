@@ -3,12 +3,12 @@
 
 ### Modify firewall rules because on perfsonar updates it opens port 22 and 443 from *.
 
-  - name: copy in perfsonar_changefw443n22rules
-    template: src={{ perfsonar_changefw443n22rules }} 
+  - name: copy in ps_changefw443n22rules
+    template: src={{ ps_changefw443n22rules }} 
               dest=/usr/local/bin/changefw443n22rules.sh 
               owner=root group=root mode=0750
 
-  - name: run perfsonar_changefw443n22rules on boot
+  - name: run ps_changefw443n22rules on boot
     lineinfile: 
         dest=/etc/rc.local 
         insertafter=EOF 
