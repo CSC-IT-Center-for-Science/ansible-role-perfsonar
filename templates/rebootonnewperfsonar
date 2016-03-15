@@ -18,7 +18,7 @@
 DATE="$(date +'%b %d')"
 #DATE="Nov 07"
 
-ISITUPDATED="$(tail -n 15 /var/log/yum.log|grep "$DATE"|grep perl-perfSONAR_PS-Toolkit-security|wc -l)"
+ISITUPDATED="$(tail -n 15 /var/log/yum.log|grep "$DATE"|grep perfsonar-toolkit-security|wc -l)"
 
 if [ "$ISITUPDATED" != 0 ]; then
 
