@@ -25,7 +25,7 @@
     tags: agentconfig
 
   - name: check if ps_agentconfigpatch has been applied
-    command: grep -c hepix /opt/perfsonar_ps/mesh_config/etc/agent_configuration.conf
+    command: grep -c myosg {{ ps_agentconfig_path }}
     register: reg_ps_agentconfigpatched
     ignore_errors: True
     tags: agentconfig
@@ -37,7 +37,7 @@
     tags: agentconfig
 
   - name: update mesg config
-    command: /opt/perfsonar_ps/mesh_config/bin/generate_configuration
+    command: {{ ps_generate_configuration }}
     when: reg_ps_diditpatch|changed
     tags: agentconfig
 

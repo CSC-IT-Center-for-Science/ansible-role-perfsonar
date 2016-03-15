@@ -4,5 +4,7 @@
 ps_changefw443n22rules: "changefw443n22rules.sh.j2"
 ps_agentconfigpatch: "agent_configuration_with_ipv6.patch.j2"
 ps_agentconfigpatch_remote_path: "/opt/agentconfig.patch"
+ps_agentconfig_path: "/etc/perfsonar/meshconfig-agent.conf"
+ps_generate_configuration: "/usr/lib/perfsonar/bin/generate_configuration"
 ps_rebootonkernelupdatecronscript: "rebootonnewweb100kernel"
 ps_rebootonnewperfsonarscript: "rebootonnewperfsonar"

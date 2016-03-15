@@ -1,38 +1,48 @@
---- agent_configuration.conf.rpmnew     2014-11-07 22:29:54.000000000 +0200
-+++ agent_configuration.conf    2015-02-03 11:52:59.400499673 +0200
-@@ -31,6 +31,13 @@
- #    #ca_certificate_file          /etc/pki/tls/bundle.crt
+--- meshconfig-agent.conf.org   2016-03-15 12:45:34.947656034 +0200
++++ meshconfig-agent.conf       2016-03-15 12:47:15.338185021 +0200
+@@ -23,20 +23,27 @@
+ #    ## included in this mesh, the agent shouldn't thrown an error.
+ #    #permit_non_participation      1
  #</mesh>
  
+ ## You can define more meshes to configure against by adding more 'mesh' blocks.
+ #<mesh>
+ #    configuration_url            https://host.domain.edu/example2.json 
+ #    #validate_certificate         0
+ #    #ca_certificate_file          /etc/pki/tls/bundle.crt
+ #</mesh>
++#
 +## WLCG MESH {{ ansible_managed }}
 +<mesh>
 +    configuration_url           https://myosg.grid.iu.edu/pfmesh/mine/hostname/{{ ansible_fqdn }}
 +    validate_certificate        0
 +    required                    1
 +</mesh>
-+
+ 
+ # You can use the 'configure_archives' variable to have the mesh configuration generate
+ # measurement_archive blocks using the write_url from your configuration file. This is disabled
+ # by default but you can enable it by setting to to 1. 
+ # configure_archives 0
+ 
  ## You can use the 'use_regular_testing' variable to disable having the mesh
  ## configuration generate the regular testing # configuration so that it will
  ## generate the traceroute master, owmesh and # pinger landmarks files instead.
-@@ -52,7 +59,7 @@
- ## You can include one or more 'address' options to specify which address
- ## corresponds to this host. By default, the agent will attempt to guess the
- ## address using the hostname of the host, as well as the hostname IPs.
--#address                      chic-pt1.es.net
-+address                      {{ ansible_fqdn }}
+ ## To do this, you'll need to set the variable to 0.
+@@ -114,16 +121,17 @@
+ #email_from_address           admin@host.site.edu
  
- # The 'restart_services' option can be used to specify whether the services
- # should be restarted after their configuration is updated. If the
-@@ -91,9 +98,11 @@
+ ## One or more 'admin_email' options can be included to specify email addresses
+ ## to send errors to. These email addresses will receive all errors (including
+ ## parsing errors). This is in addition to the emails that will be sent to the
+ ## various affected administrators (e.g. the mesh administrator or the site
+ ## administrator).
  #admin_email         admin1@site.edu
  #admin_email         admin2@site.edu
  
-+admin_email    {{ adminMailAddr }}
-+
++admin_email         {{ adminMailAddr }}
  
  ## The 'skip_redundant_tests' can be used so that if the meshes end up creating
  ## multiple tests between hosts with the exact same test parameters, it will
  ## only setup the hosts to only run one test. If you enable this, you won't see
  ## the skipped tests in the Toolkit GUI
--#skip_redundant_tests        1
-+skip_redundant_tests        1
+ #skip_redundant_tests        1
