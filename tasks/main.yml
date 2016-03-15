@@ -31,7 +31,7 @@
     tags: agentconfig
 
   - name: patch agentconfig
-    shell: patch /opt/perfsonar_ps/mesh_config/etc/agent_configuration.conf {{ ps_agentconfigpatch_remote_path }}
+    shell: patch {{ ps_agentconfig_path }} {{ ps_agentconfigpatch_remote_path }}
     when: reg_ps_agentconfigpatched|failed
     register: reg_ps_diditpatch
     tags: agentconfig
