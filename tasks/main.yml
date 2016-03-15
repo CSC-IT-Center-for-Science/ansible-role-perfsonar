@@ -36,7 +36,7 @@
     register: reg_ps_diditpatch
     tags: agentconfig
 
-  - name: update mesg config
+  - name: update mesh config by commanding generate_configuration tool
     command: "{{ ps_generate_configuration }}"
     when: reg_ps_diditpatch|changed
     tags: agentconfig
